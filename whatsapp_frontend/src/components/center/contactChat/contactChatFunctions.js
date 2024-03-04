@@ -13,9 +13,9 @@ export const generateMessage = (text, contactId) => {
         const senderId = getState().contacts.personalInfo.contactId
         dispatch(setMessages({
             id: messages.length < 1 ? 1 : Number(messages[messages.length - 1].messageId) + 1,
-            messageContent: text,
-            sendFrom: senderId,
-            sendTo: contactId,
+            message_content: text,
+            send_from: senderId,
+            send_to: contactId,
             createdAt: {
                 date: moment().format('YYYY-MM-DD'),
                 time: moment().format('HH:mm')

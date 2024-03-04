@@ -41,19 +41,19 @@ export default function DisplayMessages() {
                 }}
             >
                 <List>
-                    {messages.filter((message) => message.sendTo === contactId).map((message, index, array) => (
+                    {messages.filter((message) => message.send_to === contactId).map((message, index, array) => (
                         <ListItem
                             key={message.id}
                             ref={index === array.length - 1 ? lastMessageRef : null}
                             sx={{
-                                justifyContent: personalId === message.sendFrom ? "flex-end" : "flex-start",
+                                justifyContent: personalId === message.send_from ? "flex-end" : "flex-start",
                             }}
                         >
                             <Paper elevation={1} sx={{
                                 bgcolor: "#005c4b",
                                 padding: "9px"
                             }} >
-                                <Typography sx={{ font: "inherit", fontSize: "14.2px", color: "#e9edef" }}>{message.messageContent}</Typography>
+                                <Typography sx={{ font: "inherit", fontSize: "14.2px", color: "#e9edef" }}>{message.message_content}</Typography>
                                 <Stack
                                     direction={"row"}
                                     justifyContent={"flex-end"}

@@ -4,9 +4,9 @@ const initialState = {
     messages: [
         {
             id: 1,
-            messageContent: "hii",
-            sendFrom: 1,
-            sendTo: 2,
+            message_content: "hii",
+            send_from: 1,
+            send_to: 2,
             createdAt: {
                 date: "2024-02-09",
                 time: "07:58"
@@ -23,6 +23,13 @@ const initialState = {
         //     "delivered_at": null,
         //     "read_at": null
         // },
+
+        // {
+        //     "message_content":"jasdhfjas",
+        //     "send_from":1,
+        //     "send_to":4,
+        //     "created_at":"2001-01-01 12:12:12"
+        // }
     ],
     searchText: "",
 }
