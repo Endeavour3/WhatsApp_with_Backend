@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { DoubleTickIcon, SingleTickIcon } from "../../../assects/icons/Icons";
+import moment from "moment";
 
 
 export default function DisplayMessages() {
@@ -41,19 +42,19 @@ export default function DisplayMessages() {
                 }}
             >
                 <List>
-                    {messages.filter((message) => message.sendTo === contactId).map((message, index, array) => (
+                    {messages.filter((message) => message.send_to === contactId).map((message, index, array) => (
                         <ListItem
                             key={message.id}
                             ref={index === array.length - 1 ? lastMessageRef : null}
                             sx={{
-                                justifyContent: personalId === message.sendFrom ? "flex-end" : "flex-start",
+                                justifyContent: personalId === message.send_from ? "flex-end" : "flex-start",
                             }}
                         >
                             <Paper elevation={1} sx={{
                                 bgcolor: "#005c4b",
                                 padding: "9px"
                             }} >
-                                <Typography sx={{ font: "inherit", fontSize: "14.2px", color: "#e9edef" }}>{message.messageContent}</Typography>
+                                <Typography sx={{ font: "inherit", fontSize: "14.2px", color: "#e9edef" }}>{message.message_content}</Typography>
                                 <Stack
                                     direction={"row"}
                                     justifyContent={"flex-end"}
@@ -66,31 +67,31 @@ export default function DisplayMessages() {
                                             color: "#99beb7"
                                         }}
                                     >
-                                        {message.createdAt.time}
+                                        {moment(message.created_at).format('h:mm A')}
                                     </Typography>
                                     {
                                         // Object.hasOwn(message, "deliveredAt") ? (
-                                            message.deliveredAt ? (
-                                                <IconButton
-                                                    sx={{
-                                                        padding: "0px",
-                                                        marginLeft: "3px"
-                                                    }}
-                                                >
-                                                    <DoubleTickIcon height={11} width={16}
-                                                        color={message.readAt ? "#53bdeb" : "#99beb7"}
-                                                    />
-                                                </IconButton>
-                                            ) : (
-                                                <IconButton
-                                                    sx={{
-                                                        padding: "0px",
-                                                        marginLeft: "3px"
-                                                    }}
-                                                >
-                                                    <SingleTickIcon height={11} width={16} color="#99beb7" />
-                                                </IconButton>
-                                            )
+                                        message.delivered_at ? (
+                                            <IconButton
+                                                sx={{
+                                                    padding: "0px",
+                                                    marginLeft: "3px"
+                                                }}
+                                            >
+                                                <DoubleTickIcon height={11} width={16}
+                                                    color={message.read_at ? "#53bdeb" : "#99beb7"}
+                                                />
+                                            </IconButton>
+                                        ) : (
+                                            <IconButton
+                                                sx={{
+                                                    padding: "0px",
+                                                    marginLeft: "3px"
+                                                }}
+                                            >
+                                                <SingleTickIcon height={11} width={16} color="#99beb7" />
+                                            </IconButton>
+                                        )
                                         // ) : (
                                         //     <></>
                                         // )

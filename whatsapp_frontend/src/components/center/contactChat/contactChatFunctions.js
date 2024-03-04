@@ -13,15 +13,12 @@ export const generateMessage = (text, contactId) => {
         const senderId = getState().contacts.personalInfo.contactId
         dispatch(setMessages({
             id: messages.length < 1 ? 1 : Number(messages[messages.length - 1].messageId) + 1,
-            messageContent: text,
-            sendFrom: senderId,
-            sendTo: contactId,
-            createdAt: {
-                date: moment().format('YYYY-MM-DD'),
-                time: moment().format('HH:mm')
-            },
-            deliveredAt: null,
-            readAt: null
+            message_content: text,
+            send_from: senderId,
+            send_to: contactId,
+            created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+            delivered_at: null,
+            read_at: null
         }))
         // dispatch(stateUpdated(text, userMobileNo))
 
@@ -30,5 +27,9 @@ export const generateMessage = (text, contactId) => {
         // "send_from": senderId,
         // "send_to": contactId,
         // "created_at": moment().format('YYYY-MM-DD HH:mm:ss'),
+        // created_at: {
+        //     date: moment().format('YYYY-MM-DD'),
+        //     time: moment().format('HH:mm')
+        // },
     }
 }

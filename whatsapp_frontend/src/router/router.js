@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainDashboard from "../components/mainDashboard/MainDashboard";
-import Login from "../components/login/Login";
+// import Login from "../components/login/Login";
 import Registration from "../components/register/Registration";
 import NewChatDrawer from "../components/left/newChatDrawer/NewChatDrawer";
 import ChannelsDrawer from "../components/left/channelsDrawer/ChannelsDrawer";
@@ -16,10 +16,10 @@ export const router = createBrowserRouter([
             
         ]
     },
-    {
-        path: "/login",
-        element: <Login />
-    },
+    // {
+    //     path: "/login",
+    //     element: <Login />
+    // },
     {
         path: "/register",
         element: <Registration />

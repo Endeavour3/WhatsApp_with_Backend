@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { getContact, getContactMessages, getContacts, getMessages } from './database.js'
+import { getContact, getContactMessages, getContacts, getMessages, setMessage } from './database.js'
 
 const app = express()
 
@@ -11,23 +11,38 @@ app.get("/contacts", async (req, res) => {
     res.send(contacts)
 })
 
-app.get("/messages", async (req, res) => {
-    const messages = await getMessages()
-    res.send(messages)
-})
-
 // app.get("/messages", async (req, res) => {
-//     const sendFrom = req.query.send_from;
-//     const sendTo = req.query.send_to;
+//     const messages = await getMessages()
+//     res.send(messages)
+// })
 
-//     // Now you can use sendFrom and sendTo in your logic
-//     // For example, you can pass them to a function that fetches messages
-//     // http://localhost:3005/messages?send_from=1&send_to=2
-//     const messages = await getContactMessages(sendFrom, sendTo);
+app.get("/messages", async (req, res) => {
+    const sendFrom = req.query.send_from;
+    const sendTo = req.query.send_to;
 
-//     res.send(messages);
-// });
+    // Now you can use sendFrom and sendTo in your logic
+    // For example, you can pass them to a function that fetches messages
+    // http://localhost:3005/messages?send_from=1&send_to=2
+    const messages = await getContactMessages(sendFrom, sendTo);
 
+    res.send(messages);
+});
+
+app.post("/sendMessage", async (req, res) => {
+    const {
+        message_content,
+        send_from,
+        send_to,
+        created_at
+    } = req.body
+
+    // Now you can use sendFrom and sendTo in your logic
+    // For example, you can pass them to a function that fetches messages
+    // http://localhost:3005/messages?send_from=1&send_to=2
+    const message = await setMessage(message_content, send_from, send_to, created_at);
+
+    res.status(201).send(message);
+});
 
 app.get("/contacts/:id", async (req, res) => {
     const id = req.params.id

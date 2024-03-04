@@ -32,7 +32,16 @@ export async function getContactMessages(sendFrom, sendTo) {
     return rows;
 }
 
+export async function setMessage(message_content, send_from, send_to, created_at) {
+    const [rows] = await pool.query(`
+    INSERT INTO messages (message_content, send_from, send_to, created_at) VALUES (?, ?, ?, ?)
+    `, [message_content, send_from, send_to, created_at]);
 
+    // console.log("setMessage",rows)
+    return rows;
+}
+
+setMessage("sadjfjhasdf", 1, 2, "2001-01-01 12:12:12")
 
 export async function getContact(id) {
     const [rows] = await pool.query(`SELECT * FROM contacts WHERE id = ?`, [id])
