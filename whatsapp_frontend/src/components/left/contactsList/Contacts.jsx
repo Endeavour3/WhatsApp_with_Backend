@@ -5,10 +5,15 @@ import { Menu, MenuItem } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { DownArrowIcon, ProfileIcon } from "../../../assects/icons/Icons";
 import { getContacts, getLastMessageText, truncateText } from "./contactsListFunctions";
+import { useGetContactsQuery } from "../../../store/contactApi";
 
 
 export default function Contacts() {
   const contacts = useSelector((state) => state.contacts.contacts)
+
+  const { data, error, isLoading } = useGetContactsQuery();
+
+  console.log("useGetContactsQuery", data, error, isLoading)
 
   const messages = useSelector((state) => state.messages.messages)
 

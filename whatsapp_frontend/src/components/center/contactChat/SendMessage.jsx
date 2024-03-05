@@ -159,8 +159,14 @@ function AttachmentModal({ anchor, isOpen, onClose }) {
                     borderRadius: '16px',
                 },
             }}
-        // transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        // anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            transformOrigin={{
+                horizontal: 'left',
+                vertical: 'bottom',
+            }}
+            anchorOrigin={{
+                horizontal: 'left',
+                vertical: 'top',
+            }}
         >
             {attachmentOptions.map((option, index) => (
                 <MenuItem

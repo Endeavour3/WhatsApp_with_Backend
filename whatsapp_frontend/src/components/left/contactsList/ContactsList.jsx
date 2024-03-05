@@ -8,8 +8,6 @@ export default function ContactsList() {
         <>
             <ContactsListToolBar />
             <SearchBar />
-            {/* <LeftPannelBelowSearchBarButtons /> */}
-            {/* <LeftUsersList /> */}
             <FilterBar />
             <Contacts />
         </>

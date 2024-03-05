@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import { useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { DoubleTickIcon, SingleTickIcon } from "../../../assects/icons/Icons";
+import moment from "moment";
+import { useGetMessagesByContactQuery } from "../../../store/messageApi";
 
 
 export default function DisplayMessages() {
@@ -13,7 +15,13 @@ export default function DisplayMessages() {
 
     const contactId = 2
 
-    const messages = useSelector((state) => state.messages.messages)
+    let messages = useSelector((state) => state.messages.messages)
+
+    // const { data, error, isLoading } = useGetMessagesByContactQuery({ send_from: 1, send_to: 2});
+
+    // console.log("useGetMessagesByContactQuery", data, error, isLoading)
+
+    // messages = data
 
     const lastMessageRef = useRef(null)
 
@@ -66,31 +74,31 @@ export default function DisplayMessages() {
                                             color: "#99beb7"
                                         }}
                                     >
-                                        {message.createdAt.time}
+                                        {moment(message.created_at).format('h:mm A')}
                                     </Typography>
                                     {
                                         // Object.hasOwn(message, "deliveredAt") ? (
-                                            message.deliveredAt ? (
-                                                <IconButton
-                                                    sx={{
-                                                        padding: "0px",
-                                                        marginLeft: "3px"
-                                                    }}
-                                                >
-                                                    <DoubleTickIcon height={11} width={16}
-                                                        color={message.readAt ? "#53bdeb" : "#99beb7"}
-                                                    />
-                                                </IconButton>
-                                            ) : (
-                                                <IconButton
-                                                    sx={{
-                                                        padding: "0px",
-                                                        marginLeft: "3px"
-                                                    }}
-                                                >
-                                                    <SingleTickIcon height={11} width={16} color="#99beb7" />
-                                                </IconButton>
-                                            )
+                                        message.delivered_at ? (
+                                            <IconButton
+                                                sx={{
+                                                    padding: "0px",
+                                                    marginLeft: "3px"
+                                                }}
+                                            >
+                                                <DoubleTickIcon height={11} width={16}
+                                                    color={message.read_at ? "#53bdeb" : "#99beb7"}
+                                                />
+                                            </IconButton>
+                                        ) : (
+                                            <IconButton
+                                                sx={{
+                                                    padding: "0px",
+                                                    marginLeft: "3px"
+                                                }}
+                                            >
+                                                <SingleTickIcon height={11} width={16} color="#99beb7" />
+                                            </IconButton>
+                                        )
                                         // ) : (
                                         //     <></>
                                         // )

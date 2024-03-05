@@ -32,8 +32,18 @@ export async function getContactMessages(sendFrom, sendTo) {
     return rows;
 }
 
+export async function addContact(contact_no, contact_name, profile_picture, contact_about) {
+    const [rows] = await pool.query('INSERT INTO contacts (contact_no, contact_name, profile_picture, contact_about) VALUES (?, ?, ?, ?)', [contact_no, contact_name, profile_picture, contact_about])
+    return rows
+}
+
+// export async function addProfilePicture(contact_no, contact_name, contact_about) {
+//     const [rows] = await pool.query('INSERT INTO contacts (contact_no, contact_name, contact_about) VALUES (?, ?, ?)', [contact_no, contact_name, contact_about])
+//     return rows
+// }
+
 export async function setMessage(message_content, send_from, send_to, created_at) {
-    const [rows] = await pool.query(`
+    const rows = await pool.query(`
     INSERT INTO messages (message_content, send_from, send_to, created_at) VALUES (?, ?, ?, ?)
     `, [message_content, send_from, send_to, created_at]);
 
@@ -41,12 +51,31 @@ export async function setMessage(message_content, send_from, send_to, created_at
     return rows;
 }
 
-setMessage("sadjfjhasdf", 1, 2, "2001-01-01 12:12:12")
 
 export async function getContact(id) {
     const [rows] = await pool.query(`SELECT * FROM contacts WHERE id = ?`, [id])
     return rows[0]
 }
+
+export async function setProfile(profile_picture, id) {
+    const result = await pool.query(`UPDATE contacts SET profile_picture=? WHERE id = ?`, [profile_picture, id])
+    return result
+}
+
+// const display = () => {
+//     getContact(1)
+//         .then(result => {
+//             // Handle the resolved data here
+//             console.log(result);
+//         })
+//         .catch(error => {
+//             // Handle any errors that may occur during the promise execution
+//             console.error(error);
+//         });
+// };
+
+
+// console.log("first", display())
 
 // export async function createNote(title, content) {
 //     const [result] = await pool.query(
