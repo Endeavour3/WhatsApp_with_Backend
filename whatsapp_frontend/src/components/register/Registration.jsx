@@ -50,6 +50,8 @@ export default function Registration() {
             formData.append('contact_about', data.contact_about);
             formData.append('profile_picture', data.profile_picture[0]);
 
+            console.log("formData", formData)
+
             const result = await addContact(formData);
             console.log("addContact", result)
             // setProfile(result.data.profile_picture.data)

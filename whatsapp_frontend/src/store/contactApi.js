@@ -10,6 +10,9 @@ export const contactApi = createApi({
         getContact: builder.query({
             query: (id) => `contacts/${id}`,
         }),
+        authenticate: builder.query({
+            query: (contact_no) => `login/${contact_no}`
+        }),
         addContact: builder.mutation({
             query: (data) => ({
                 url: 'addContact',
@@ -18,10 +21,10 @@ export const contactApi = createApi({
             }),
         }),
         setProfile: builder.mutation({
-            query: ({ id, data }) => ({
+            query: ({ id, formData }) => ({
                 url: `setProfile/${id}`,
                 method: 'PUT',
-                body: data,
+                body: formData,
             }),
         })
     }),
@@ -29,4 +32,4 @@ export const contactApi = createApi({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetContactsQuery, useGetContactQuery, useAddContactMutation, useSetProfileMutation } = contactApi
+export const { useGetContactsQuery, useGetContactQuery, useAuthenticateQuery, useAddContactMutation, useSetProfileMutation } = contactApi

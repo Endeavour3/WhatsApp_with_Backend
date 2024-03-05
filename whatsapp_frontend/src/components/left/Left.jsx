@@ -1,13 +1,10 @@
 import React from 'react'
 import { Stack } from '@mui/material'
 import ContactsList from './contactsList/ContactsList'
-import { Outlet, useInRouterContext, useLocation, useParams } from 'react-router-dom'
-import ProfileDrawer from './profileDrawer/ProfileDrawer'
+import { Outlet, useLocation, useParams } from 'react-router-dom'
 
 export default function Left() {
     const location = useLocation()
-
-    // const query = uses
 
     const { id } = useParams()
 
@@ -20,8 +17,7 @@ export default function Left() {
         >
             {
                 id ?
-                    // <ContactsList />
-                    <ProfileDrawer />
+                    <ContactsList />
                     :
                     <Outlet />
             }

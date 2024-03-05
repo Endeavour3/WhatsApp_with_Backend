@@ -15,6 +15,45 @@ export async function getContacts() {
     return rows
 }
 
+
+export async function checkContactNo(contact_no) {
+    const [rows] = await pool.query(`SELECT * FROM contacts WHERE contact_no = ?`, [contact_no])
+    return rows[0]
+}
+
+export async function sendOtp(contact_id) {
+    const [otp] = await pool.query(`SELECT otp FROM otps WHERE contact_id = ?`, [contact_id])
+    return otp[0]
+}
+
+
+export async function authenticate(contact_no) {
+    const [rows] = await pool.query(`SELECT * FROM contacts WHERE id = ?`, [contact_no])
+    return rows[0]
+    // const rows = await pool.query(`SELECT * FROM contacts WHERE id = ?`, [contact_no])
+    // return rows
+}
+
+export async function addContact(contact_no, contact_name, profile_picture, contact_about) {
+    const [rows] = await pool.query('INSERT INTO contacts (contact_no, contact_name, profile_picture, contact_about) VALUES (?, ?, ?, ?)', [contact_no, contact_name, profile_picture, contact_about])
+    return rows
+}
+
+export async function getContact(id) {
+    const [rows] = await pool.query(`SELECT * FROM contacts WHERE id = ?`, [id])
+    return rows[0]
+}
+
+export async function setProfile(profile_picture, id) {
+    const result = await pool.query(`UPDATE contacts SET profile_picture=? WHERE id = ?`, [profile_picture, id])
+    return result
+}
+
+// export async function addProfilePicture(contact_no, contact_name, contact_about) {
+//     const [rows] = await pool.query('INSERT INTO contacts (contact_no, contact_name, contact_about) VALUES (?, ?, ?)', [contact_no, contact_name, contact_about])
+//     return rows
+// }
+
 export async function getMessages() {
     const [rows] = await pool.query("SELECT * FROM messages")
     return rows
@@ -32,16 +71,6 @@ export async function getContactMessages(sendFrom, sendTo) {
     return rows;
 }
 
-export async function addContact(contact_no, contact_name, profile_picture, contact_about) {
-    const [rows] = await pool.query('INSERT INTO contacts (contact_no, contact_name, profile_picture, contact_about) VALUES (?, ?, ?, ?)', [contact_no, contact_name, profile_picture, contact_about])
-    return rows
-}
-
-// export async function addProfilePicture(contact_no, contact_name, contact_about) {
-//     const [rows] = await pool.query('INSERT INTO contacts (contact_no, contact_name, contact_about) VALUES (?, ?, ?)', [contact_no, contact_name, contact_about])
-//     return rows
-// }
-
 export async function setMessage(message_content, send_from, send_to, created_at) {
     const rows = await pool.query(`
     INSERT INTO messages (message_content, send_from, send_to, created_at) VALUES (?, ?, ?, ?)
@@ -52,21 +81,16 @@ export async function setMessage(message_content, send_from, send_to, created_at
 }
 
 
-export async function getContact(id) {
-    const [rows] = await pool.query(`SELECT * FROM contacts WHERE id = ?`, [id])
-    return rows[0]
-}
 
-export async function setProfile(profile_picture, id) {
-    const result = await pool.query(`UPDATE contacts SET profile_picture=? WHERE id = ?`, [profile_picture, id])
-    return result
-}
 
 // const display = () => {
-//     getContact(1)
+//     checkContactNo(917218724953)
 //         .then(result => {
 //             // Handle the resolved data here
-//             console.log(result);
+//             // console.log(result);
+//             sendOtp(result.id).then(otp => {
+//                 console.log("otp", otp)
+//             })
 //         })
 //         .catch(error => {
 //             // Handle any errors that may occur during the promise execution

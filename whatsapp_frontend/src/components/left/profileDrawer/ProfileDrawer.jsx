@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form';
 import { useSetProfileMutation } from "../../../store/contactApi";
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-// import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -48,6 +47,32 @@ export default function ProfileDrawer() {
   const [clientYposition, setClientYposition] = useState(null)
 
 
+
+  const [setProfile, { isLoading, isSuccess, isError }] = useSetProfileMutation();
+
+  const [file, setFile] = useState(null);
+
+  const handleChange = async (selectedFile) => {
+    try {
+      const formData = new FormData();
+      formData.append('profile_picture', selectedFile);
+
+      const id = 1
+
+      const result = await setProfile({ id, formData })
+
+      console.log("result", result)
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+    handleChange(event.target.files[0]); // Trigger callback with selected file
+  };
+
   // const handleFileUpload = (data) => {
   //   const file = data.profile_picture[0];
 
@@ -60,57 +85,35 @@ export default function ProfileDrawer() {
   // };
 
 
-  const [selectedFile, setSelectedFile] = useState(null);
-  const fileInputRef = useRef(null);
-  const [mutate, { isLoading, error }] = useSetProfileMutation();
+  // const [selectedFile, setSelectedFile] = useState(null);
+  // const fileInputRef = useRef(null);
+  // const [mutate, { isLoading, error }] = useSetProfileMutation();
 
-  const handleOpenFilePicker = () => {
-    fileInputRef.current.click();
-  };
+  // const handleOpenFilePicker = () => {
+  //   fileInputRef.current.click();
+  // };
 
-  const handleFileChange = (event) => {
-    const newFile = event.target.files[0];
-    console.log("formData", event.target.files)
-    // setSelectedFile(newFile);
-  };
+  // const handleFileChange = (event) => {
+  //   const newFile = event.target.files[0];
+  //   console.log("formData", event.target.files)
+  //   // setSelectedFile(newFile);
+  // };
 
-  const handleUpload = async () => {
-    if (!selectedFile) {
-      // Handle no file selected case
-      return;
-    }
+  // const handleUpload = async () => {
+  //   if (!selectedFile) {
+  //     // Handle no file selected case
+  //     return;
+  //   }
 
-    const formData = new FormData();
-    formData.append('profile_picture', selectedFile);
+  //   const formData = new FormData();
+  //   formData.append('profile_picture', selectedFile);
 
-    try {
-      // await mutate(formData);
-      console.log("formData", formData)
-      setSelectedFile(null); // Clear selected file after successful upload
-    } catch (err) {
-      // Handle upload error
-      console.error(err);
-    }
-  };
-
-
-
-  // const onSubmit = async (data) => {
   //   try {
-  //     const formData = new FormData();
-  //     formData.append('contact_no', data.contact_no);
-  //     formData.append('contact_name', data.contact_name);
-  //     formData.append('contact_about', data.contact_about);
-  //     formData.append('profile_picture', data.profile_picture[0]);
-
-  //     const result = await addContact(formData);
-  //     console.log("addContact", result)
-  //     // setProfile(result.data.profile_picture.data)
-  //     // setProfile(`data:image/jpg;base64,${Buffer.from(result.data.profile_picture).toString('base64')}`)
-  //     reset(); // Clear form data after successful submission
-  //   } catch (error) {
-  //     console.error(error);
-  //     setError('general', { type: 'manual', message: 'Failed to submit data' });
+  //     // await mutate(formData);
+  //     console.log("formData", formData)
+  //     setSelectedFile(null);
+  //   } catch (err) {
+  //     console.error(err);
   //   }
   // };
 
@@ -246,9 +249,11 @@ export default function ProfileDrawer() {
               fontSize: "14.5px",
               '&:hover': { bgcolor: "#182229" },
             }}
+            onChange={handleFileChange}
           >
             Upload photo
-            <VisuallyHiddenInput type="file" ref={fileInputRef} onChange={handleFileChange} />
+            {/* <VisuallyHiddenInput type="file" ref={fileInputRef} onChange={handleFileChange} /> */}
+            <VisuallyHiddenInput type="file" />
           </MenuItem>
         </Menu>
         <Stack
@@ -329,3 +334,95 @@ export default function ProfileDrawer() {
     </>
   )
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import { styled } from '@mui/material/styles';
+// import Button from '@mui/material/Button';
+// import { useSetProfileMutation } from '../../../store/contactApi';
+// import { useState } from 'react';
+
+// export default function ProfileDrawer() {
+//   const [setProfile, { isLoading, isSuccess, isError }] = useSetProfileMutation();
+
+//   const [errMsg, setErrMsg] = useState("")
+
+//   const handleFileChange = async (selectedFile) => {
+//     try {
+//       const formData = new FormData();
+//       formData.append('profile_picture', selectedFile);
+
+//       const id = 1
+
+//       const result = await setProfile({ id, formData })
+
+//       console.log("result", result)
+//     } catch (error) {
+//       console.error(error);
+//       setErrMsg(error)
+//     }
+
+//     // setProfile({ id, formData }) // Use formData for mutation body
+//     //   .then(() => console.log('Profile updated successfully'))
+//     //   .catch((error) => console.error('Error:', error));
+//   };
+
+//   return (
+//     <div>
+//       <InputFileUpload onChange={handleFileChange} />
+//       {isLoading && <p>Uploading...</p>}
+//       {isSuccess && <p>Profile updated successfully!</p>}
+//       {isError && <p>Error: {errMsg}</p>}
+//     </div>
+//   );
+// }
+
+
+
+// // const VisuallyHiddenInput = styled('input')({
+// //   clip: 'rect(0 0 0 0)',
+// //   clipPath: 'inset(50%)',
+// //   height: 1,
+// //   overflow: 'hidden',
+// //   position: 'absolute',
+// //   bottom: 0,
+// //   left: 0,
+// //   whiteSpace: 'nowrap',
+// //   width: 1,
+// // });
+
+// function InputFileUpload({ onChange }) {
+//   const [file, setFile] = useState(null);
+
+// const handleFileChange = (event) => {
+//   setFile(event.target.files[0]);
+//   onChange(event.target.files[0]); // Trigger callback with selected file
+// };
+
+//   return (
+//     <Button
+//       component="label"
+//       role={undefined}
+//       variant="contained"
+//       tabIndex={-1}
+//       onChange={handleFileChange}
+//     >
+//       Upload file
+//       <VisuallyHiddenInput type="file" />
+//     </Button>
+//   );
+// }
