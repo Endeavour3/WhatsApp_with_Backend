@@ -6,7 +6,5 @@ export const useScreenDetectorMui=()=>{
     const isTablet = useMediaQuery(theme.breakpoints.only('sm'))
     const isDesktop = useMediaQuery(theme.breakpoints.up('md'))
 
-
-
     return {isMobile, isTablet, isDesktop}
 }

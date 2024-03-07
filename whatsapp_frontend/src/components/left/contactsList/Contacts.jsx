@@ -9,11 +9,13 @@ import { useGetContactsQuery } from "../../../store/contactApi";
 
 
 export default function Contacts() {
-  const contacts = useSelector((state) => state.contacts.contacts)
+  const {id} = useParams()
 
-  const { data, error, isLoading } = useGetContactsQuery();
+  const contacts = useSelector((state) => state.contacts.contacts.filter((contact)=>contact.contactId != id))
 
-  console.log("useGetContactsQuery", data, error, isLoading)
+  // const { data, error, isLoading } = useGetContactsQuery();
+
+  // console.log("useGetContactsQuery", data, error, isLoading)
 
   const messages = useSelector((state) => state.messages.messages)
 

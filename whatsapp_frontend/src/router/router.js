@@ -7,13 +7,23 @@ import StatusDrawer from "../components/left/statusDrawer/StatusDrawer";
 import CommunitiesDrawer from "../components/left/communitiesDrawer/CommunitiesDrawer";
 import ProfileDrawer from "../components/left/profileDrawer/ProfileDrawer";
 import Login from "../components/login/Login";
+import Center from "../components/center/Center";
+import ContactsList from "../components/left/contactsList/ContactsList";
+import ContactChat from "../components/center/contactChat/ContactChat";
 
 export const router = createBrowserRouter([
     {
         path: "/:id",
         element: <MainDashboard />,
         children: [
-
+            {
+                path: "/:id/profile",
+                element: <ProfileDrawer />
+            },
+            {
+                path: "/:id/:receiverId",
+                element: <ContactChat />
+            },
         ]
     },
     {
@@ -24,10 +34,7 @@ export const router = createBrowserRouter([
         path: "/register",
         element: <Registration />
     },
-    // {
-    //     path: "/profile",
-    //     element: <ProfileDrawer />
-    // },
+
     // {
     //     path: "/communities",
     //     element: <CommunitiesDrawer />

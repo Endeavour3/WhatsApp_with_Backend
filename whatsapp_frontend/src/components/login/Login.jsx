@@ -1,17 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import ReactPhoneInput from 'react-phone-input-2';
-import { CircularProgress, Grid, Stack, Typography } from '@mui/material';
+import { CircularProgress, Grid, Stack, Typography, useMediaQuery } from '@mui/material';
 import 'react-phone-input-2/lib/style.css';
+import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoggedInUser } from '../../store/contactsSlice';
 
 export default function Login() {
     const [phoneNumber, setPhoneNumber] = useState('');
-    console.log("phoneNumber", phoneNumber)
     const [otp, setOtp] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const verifyOtp = useRef("")
+
+    const dispatch = useDispatch()
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -21,19 +26,16 @@ export default function Login() {
             return;
         }
 
-        // const formattedPhoneNumber = phoneNumber.replace(/\D/g, ''); // Remove non-digits
-
         setIsLoading(true);
         try {
-            const response = await fetch('http://localhost:3005/send-otp', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phoneNumber: phoneNumber.replace(/\D/g, '') })
+            const response = await axios.post(`${process.env.REACT_APP_SERVER_BASEURL}:${process.env.REACT_APP_SERVER_PORT}/send-otp`, {
+                phoneNumber: phoneNumber.replace(/\D/g, ''),
             });
 
-            if (response.ok) {
-                alert('OTP sent successfully!');
-                // Optionally, show a timer indicating OTP expiry.
+            if (response.status === 200) {
+                // console.log('Your OTP for login is', response.data.otp);
+                verifyOtp.current = response.data.otp
+                alert(`Your OTP for login is ${response.data.otp} copy it`);
             } else {
                 console.error('Error sending OTP:', response.statusText);
                 alert('An error occurred. Please try again.');
@@ -46,7 +48,8 @@ export default function Login() {
         }
     };
 
-    const handleVerifyOtp = async (e) => {
+
+    const handleVerifyOtp = async (e, otp, phoneNumber) => {
         e.preventDefault();
 
         if (!otp) {
@@ -56,16 +59,23 @@ export default function Login() {
 
         setIsLoading(true);
         try {
-            const response = await fetch('/api/verify-otp', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phoneNumber: phoneNumber.replace(/\D/g, ''), otp: otp })
+            // const response = await fetch('/api/verify-otp', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ phoneNumber: phoneNumber.replace(/\D/g, ''), otp: otp })
+            // });
+
+            const response = await axios.post(`${process.env.REACT_APP_SERVER_BASEURL}:${process.env.REACT_APP_SERVER_PORT}/verify-otp`, {
+                phoneNumber: phoneNumber.replace(/\D/g, ''),
+                otp: otp
             });
 
-            if (response.ok) {
-                const data = await response.json();
-                // Store user data (e.g., access token) in local storage or state
-                navigate('/chat'); // Redirect to the chat interface
+            console.log("response", response)
+
+            if (response.status === 200) {
+                alert(response.data.message)
+                dispatch(setLoggedInUser(response.data.contactId))
+                navigate(`/${response.data.contactId}`);
             } else {
                 console.error('Error verifying OTP:', response.statusText);
                 alert('Invalid OTP code. Please try again.');
@@ -129,7 +139,7 @@ export default function Login() {
                         {isLoading ? <CircularProgress size="small" color="inherit" /> : 'Send OTP'}
                     </Button>
                 </form>
-                {(otp) && (
+                {verifyOtp.current && (
                     <div>
                         <TextField
                             label="OTP Code"
@@ -142,7 +152,7 @@ export default function Login() {
                             disabled={isLoading}
                         />
                         <Button variant="contained" type="button"
-                            onClick={handleVerifyOtp}
+                            onClick={(e) => { handleVerifyOtp(e, otp, phoneNumber) }}
                             disabled={isLoading}>
                             {isLoading ? <CircularProgress size="small" color="inherit" /> : 'Verify OTP'}
                         </Button>

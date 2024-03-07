@@ -1,13 +1,14 @@
 import { IconButton, Input, Stack, List, ListItem, Dialog, Paper, Typography, Menu, MenuItem } from "@mui/material";
 import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-// import { generateMessage } from "../functions";
 import { useParams } from "react-router-dom";
 import { AttachmentIcon, CameraIconAdvanced, ContactIcon, DocumentIcon, NewStickerIcon, PhotoVideoIcon, PollIcon, SendIcon, SmileyIcon, VoiceCommandIcon } from "../../../assects/icons/Icons";
 import { generateMessage } from "./contactChatFunctions";
 
 export default function SendMessage() {
     // const { contactId } = useParams()
+
+    const { id } = useParams()
 
     const contactId = 2
 
@@ -88,7 +89,7 @@ export default function SendMessage() {
                         onKeyUp={(e) => {
                             if (e.key === "Enter") {
                                 if (textToSend) {
-                                    dispatch(generateMessage(textToSend, contactId))
+                                    dispatch(generateMessage(textToSend, id, contactId))
                                     setTextToSend("")
                                 }
                             }
@@ -116,7 +117,7 @@ export default function SendMessage() {
                     textToSend ?
                         <IconButton
                             onClick={() => {
-                                dispatch(generateMessage(textToSend, contactId))
+                                dispatch(generateMessage(textToSend, id, contactId))
                                 setTextToSend("")
                             }}
                         >

@@ -1,25 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    // personalInfo: {
-    //     name: "Ashutosh Verulkar",
-    //     profilePicture: "",
-    //     countryCode: "+91",
-    //     mobileNo: "7218724953",
-    //     about: "I am not perfect but I am limited edition",
-    // },
-    personalInfo: {
-        contactId: 1,
-        contactName: "Ashutosh Verulkar",
-        profilePicture: "",
-        contactNo: "+917218724953",
-        contactAbout: "I am not perfect but I am limited edition",
-        contactLastSeen: {
-            date: "2024-02-28",
-            time: "15:23"
-        }
-    },
+    loggedInUser: "",
     contacts: [
+        {
+            contactId: 1,
+            contactName: "Ashutosh Verulkar",
+            profilePicture: "",
+            contactNo: "+917218724953",
+            contactAbout: "I am not perfect but I am limited edition",
+            contactLastSeen: {
+                date: "2024-02-28",
+                time: "15:23"
+            }
+        },
         {
             contactId: 2,
             contactName: "Rameshwar Varpe",
@@ -162,9 +156,12 @@ export const contactsSlice = createSlice({
         setContacts: (state, action) => {
             state.contacts = action.payload
         },
+        setLoggedInUser: (state, action) => {
+            state.loggedInUser = action.payload
+        }
     },
 })
 
-export const { setContacts } = contactsSlice.actions
+export const { setContacts, setLoggedInUser } = contactsSlice.actions
 
 export default contactsSlice.reducer

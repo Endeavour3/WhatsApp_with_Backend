@@ -1,40 +1,49 @@
 import express from 'express'
 import multer from 'multer'
 
-import { addContact, authenticate, checkContactNo, getContact, getContactMessages, getContacts, getMessages, sendOtp, setMessage, setProfile } from './database.js'
+import { addContact, authenticate, checkContactNo, getContact, getContactMessages, getContacts, getMessages, sendOtp, setMessage, setProfile, verifyOtp } from './database.js'
 
 const app = express()
 
 app.use(express.json())
 
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); // Replace with the origin of your frontend
+    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     next();
 });
 
-// Multer configuration for handling file uploads
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 
-app.post('/send-otp', async (req, res) => {
-    const { phoneNumber } = req.body;
-    console.log("contact", phoneNumber)
+app.post('/send-otp', upload.none(), async (req, res) => {
+    const contact_no = req.body.phoneNumber;
+    const contact = await checkContactNo(contact_no)
+    console.log("contact_no", contact_no)
+    if (contact_no == contact.contact_no) {
+        console.log("contact.id", contact)
+        const otp = await sendOtp(contact.id)
+        console.log("otp", otp)
+        // res.status(200).json(otp)
+        res.json(otp)
 
-    // const contact = await checkContactNo(contact_no)
+    } else {
+        res.status(204).json({ message: `No account is associated with Mobile No ${contact_no}` })
+    }
+});
 
-    res.send(phoneNumber)
-
-    // if (contact_no == contact.contact_no) {
-    //     console.log("contact.id", contact)
-    //     const otp = await sendOtp(contact.id)
-    //     console.log("otp", otp)
-    //     res.status(200).send(otp)
-    // } else {
-    //     res.status(204).json({ message: `No account is associated with Mobile No ${contact_no}` })
-    // }
+app.post('/verify-otp', upload.any(), async (req, res) => {
+    const contact_no = req.body.phoneNumber;
+    const otp = req.body.otp;
+    const result = await verifyOtp(contact_no, otp)
+    console.log("first", result)
+    if (contact_no == result.contact_no && otp == result.otp) {
+        res.status(200).json({ message: "OTP verified sucessfully", contactId: result.id })
+    } else {
+        res.status(204).json({ message: "Incorrect OTP entered" })
+    }
 });
 
 app.get("/contacts", async (req, res) => {
@@ -54,18 +63,6 @@ app.get("/login/:contact_no", async (req, res) => {
     res.status(200).json(contact)
 })
 
-// app.put("/setProfile/:id", upload.single('profile_picture'), async (req, res) => {
-//     const id = req.params.id
-
-//     const profile_picture = req.file ? req.file.buffer : null;
-
-//     // const result = await setProfile(profile_picture, id)
-
-//     console.log("profile_picture", profile_picture)
-
-//     res.status(201).json({ id, profile_picture })
-// })
-
 app.put("/setProfile/:id", upload.single('profile_picture'), async (req, res) => {
     const id = req.params.id
 
@@ -75,8 +72,6 @@ app.put("/setProfile/:id", upload.single('profile_picture'), async (req, res) =>
 
     console.log("profile_picture", profile_picture)
 
-    // res.json({ id, profile_picture })
-
     res.status(200).json(result)
 })
 
@@ -85,11 +80,19 @@ app.post('/addContact', upload.single('profile_picture'), async (req, res) => {
 
     const profile_picture = req.file ? req.file.buffer : null;
 
-    const results = await addContact(contact_no, contact_name, profile_picture, contact_about)
+    const checkResult = await checkContactNo(contact_no)
 
-    res.status(201).json({ message: 'Contact created successfully', contactId: results.insertId })
+    if (checkResult?.contact_no == contact_no) {
+        res.status(400).json({ message: "This Number is already registered" })
+    }
+    else {
+        const result = await addContact(contact_no, contact_name, profile_picture, contact_about)
+        console.log("Result", result)
+        res.status(200).json({ message: "Account Created Successfully", contactId: result.insertId })
+    }
 
-    // res.status(201).json({ contact_no, contact_name, contact_about, profile_picture })
+    // res.status(201).json({ message: 'Contact created successfully', contactId: results.insertId })
+    // res.status(200)
 });
 
 
@@ -123,17 +126,14 @@ app.post("/sendMessage", async (req, res) => {
     res.status(201).send(message);
 });
 
-// app.use((err, req, res, next) => {
-//     res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); // Replace with the origin of your frontend
-//     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-//     res.header('Access-Control-Allow-Headers', 'Content-Type');
-//     next();
-//     console.error(err.stack)
-//     res.status(500).send('Something broke!')
-// });
+app.use((err, req, res, next) => {
+    console.error(err.stack)
+    res.status(500).send('Something broke!')
+})
 
-
-
+app.listen(process.env.SERVER_PORT, () => {
+    console.log(`Server is running on port ${process.env.SERVER_PORT}`)
+})
 
 // const mysql = require('mysql2');
 // const multer = require('multer');
@@ -182,19 +182,3 @@ app.post("/sendMessage", async (req, res) => {
 //     res.status(201).json({ message: 'Contact created successfully', contactId: results.insertId })
 //     // res.status(201).json({ contact_no, contact_name, contact_about, profile_picture })
 // });
-
-
-
-
-
-
-
-
-app.use((err, req, res, next) => {
-    console.error(err.stack)
-    res.status(500).send('Something broke!')
-})
-
-app.listen(process.env.SERVER_PORT, () => {
-    console.log(`Server is running on port ${process.env.SERVER_PORT}`)
-})

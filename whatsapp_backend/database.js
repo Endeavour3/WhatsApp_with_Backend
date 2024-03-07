@@ -21,6 +21,19 @@ export async function checkContactNo(contact_no) {
     return rows[0]
 }
 
+export async function verifyOtp(contact_no, otp) {
+    // const [rows] = await pool.query(`SELECT * FROM contacts WHERE contact_no = ?`, [otp, contact_no])
+    // return rows[0]
+    const [rows] = await pool.query(`
+            SELECT c.id,c.contact_no, o.otp
+            FROM contacts c
+            JOIN otps o ON c.id = o.contact_id
+            WHERE c.contact_no = ? AND o.otp = ?;
+        `, [contact_no, otp]);
+
+    return rows[0];
+}
+
 export async function sendOtp(contact_id) {
     const [otp] = await pool.query(`SELECT otp FROM otps WHERE contact_id = ?`, [contact_id])
     return otp[0]
@@ -30,8 +43,6 @@ export async function sendOtp(contact_id) {
 export async function authenticate(contact_no) {
     const [rows] = await pool.query(`SELECT * FROM contacts WHERE id = ?`, [contact_no])
     return rows[0]
-    // const rows = await pool.query(`SELECT * FROM contacts WHERE id = ?`, [contact_no])
-    // return rows
 }
 
 export async function addContact(contact_no, contact_name, profile_picture, contact_about) {
@@ -48,11 +59,6 @@ export async function setProfile(profile_picture, id) {
     const result = await pool.query(`UPDATE contacts SET profile_picture=? WHERE id = ?`, [profile_picture, id])
     return result
 }
-
-// export async function addProfilePicture(contact_no, contact_name, contact_about) {
-//     const [rows] = await pool.query('INSERT INTO contacts (contact_no, contact_name, contact_about) VALUES (?, ?, ?)', [contact_no, contact_name, contact_about])
-//     return rows
-// }
 
 export async function getMessages() {
     const [rows] = await pool.query("SELECT * FROM messages")
@@ -76,7 +82,6 @@ export async function setMessage(message_content, send_from, send_to, created_at
     INSERT INTO messages (message_content, send_from, send_to, created_at) VALUES (?, ?, ?, ?)
     `, [message_content, send_from, send_to, created_at]);
 
-    // console.log("setMessage",rows)
     return rows;
 }
 
@@ -84,13 +89,13 @@ export async function setMessage(message_content, send_from, send_to, created_at
 
 
 // const display = () => {
-//     checkContactNo(917218724953)
+//     verifyOtp(917218724953, 543210)
 //         .then(result => {
 //             // Handle the resolved data here
-//             // console.log(result);
-//             sendOtp(result.id).then(otp => {
-//                 console.log("otp", otp)
-//             })
+//             console.log(result);
+//             // sendOtp(result.id).then(otp => {
+//             //     console.log("otp", otp)
+//             // })
 //         })
 //         .catch(error => {
 //             // Handle any errors that may occur during the promise execution
@@ -100,21 +105,3 @@ export async function setMessage(message_content, send_from, send_to, created_at
 
 
 // console.log("first", display())
-
-// export async function createNote(title, content) {
-//     const [result] = await pool.query(
-//         `INSERT INTO notes (title, content)
-//         VALUES (?, ?)`,
-//         [title, content]
-//     )
-
-//     const id = result.insertId
-//     return getNote(id)
-// }
-
-// export async function delNote(id) {
-//     const result1 = await pool.query(`DELETE FROM notes WHERE id = ?`, [id])
-
-//     const result2 = await getNotes()
-//     return result2
-// }

@@ -1,6 +1,6 @@
 import { Typography, Grid, Stack, IconButton, Avatar, Box, Menu, MenuItem } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { BackIcon, PencilIcon, ProfileIcon } from "../../../assects/icons/Icons";
 import { useRef, useState } from "react";
 import { useForm } from 'react-hook-form';
@@ -22,7 +22,9 @@ const VisuallyHiddenInput = styled('input')({
 
 
 export default function ProfileDrawer() {
-  const personalInfo = useSelector((state) => state.contacts.personalInfo)
+  const { id } = useParams()
+
+  const personalInfo = useSelector((state) => state.contacts.contacts.find((contact) => contact.contactId == id))
 
   const navigate = useNavigate();
 

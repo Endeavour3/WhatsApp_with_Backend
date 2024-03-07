@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export const contactApi = createApi({
     reducerPath: 'contactApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3005/' }),
+    baseQuery: fetchBaseQuery({ baseUrl: `${process.env.REACT_APP_SERVER_BASEURL}:${process.env.REACT_APP_SERVER_PORT}/` }),
     endpoints: (builder) => ({
         getContacts: builder.query({
             query: () => `contacts`,

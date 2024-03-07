@@ -9,13 +9,11 @@ import { useGetMessagesByContactQuery } from "../../../store/messageApi";
 
 
 export default function DisplayMessages() {
-    // const { contactId } = useParams()
+    const { id } = useParams()
 
-    const personalId = useSelector((state) => state.contacts.personalInfo.contactId)
+    const { receiverId } = useParams()
 
-    const contactId = 2
-
-    let messages = useSelector((state) => state.messages.messages)
+    const messages = useSelector((state) => state.messages.messages)
 
     // const { data, error, isLoading } = useGetMessagesByContactQuery({ send_from: 1, send_to: 2});
 
@@ -49,12 +47,12 @@ export default function DisplayMessages() {
                 }}
             >
                 <List>
-                    {messages.filter((message) => message.send_to === contactId).map((message, index, array) => (
+                    {messages.filter((message) => message.send_to == receiverId).map((message, index, array) => (
                         <ListItem
                             key={message.id}
                             ref={index === array.length - 1 ? lastMessageRef : null}
                             sx={{
-                                justifyContent: personalId === message.send_from ? "flex-end" : "flex-start",
+                                justifyContent: id == message.send_from ? "flex-end" : "flex-start",
                             }}
                         >
                             <Paper elevation={1} sx={{

@@ -25,14 +25,17 @@ import { useForm } from 'react-hook-form';
 import { TextField, Button, CircularProgress, CardMedia } from '@mui/material';
 import { useAddContactMutation, useGetContactQuery } from '../../store/contactApi';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Registration() {
     const { register, handleSubmit, formState: { errors }, setError, reset } = useForm();
     const [addContact, { isLoading }] = useAddContactMutation();
 
-    const contact = useGetContactQuery(2)
+    const navigate = useNavigate()
 
-    console.log("contact", contact.data)
+    // const contact = useGetContactQuery(2)
+
+    // console.log("contact", contact.data)
 
     // const [profile, setProfile] = useState("")
     // console.log("profile", profile)
@@ -50,10 +53,17 @@ export default function Registration() {
             formData.append('contact_about', data.contact_about);
             formData.append('profile_picture', data.profile_picture[0]);
 
-            console.log("formData", formData)
+            // console.log("formData", formData)
 
             const result = await addContact(formData);
-            console.log("addContact", result)
+            if (result.error) {
+                alert(result.error.data.message)
+            }
+            if (result) {
+                alert(result.data.message)
+                navigate(`/${result.data.contactId}`);
+            }
+            // console.log("addContact", result)
             // setProfile(result.data.profile_picture.data)
             // setProfile(`data:image/jpg;base64,${Buffer.from(result.data.profile_picture).toString('base64')}`)
             reset(); // Clear form data after successful submission

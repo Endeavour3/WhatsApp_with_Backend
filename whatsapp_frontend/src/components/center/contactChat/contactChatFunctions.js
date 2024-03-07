@@ -7,10 +7,9 @@ export const openWhatsAppDesktop = () => {
 };
 
 
-export const generateMessage = (text, contactId) => {
+export const generateMessage = (text, senderId, contactId) => {
     return (dispatch, getState) => {
         const messages = getState().messages.messages
-        const senderId = getState().contacts.personalInfo.contactId
         dispatch(setMessages({
             id: messages.length < 1 ? 1 : Number(messages[messages.length - 1].messageId) + 1,
             message_content: text,
