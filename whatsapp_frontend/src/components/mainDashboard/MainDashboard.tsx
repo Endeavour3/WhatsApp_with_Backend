@@ -4,13 +4,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import Left from "../left/Left";
 import Center from "../center/Center";
 import Right from "../right/Right";
-import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import { useAppSelector } from "../../hooks/storeHooks";
 
 export default function MainDashboard() {
     const { id } = useParams()
 
-    const loggedInUser = useSelector(state => state.contacts.loggedInUser)
+    const loggedInUser = useAppSelector(state => state.contacts.loggedInUser)
 
     const navigate = useNavigate()
 
@@ -48,7 +48,9 @@ export default function MainDashboard() {
                             <Grid
                                 item
                                 xs={12} sm={6} md={4.65} lg={3.65} xl={3.65}
-                                borderRight={!screen.isMobile && "0.5px solid #313d45"}
+                                sx={{
+                                    borderRight: !screen.isMobile ? "0.5px solid #313d45" : "none"
+                                }}
                             >
                                 <Left />
                             </Grid>

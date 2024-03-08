@@ -1,25 +1,27 @@
 import { Stack, Avatar, Typography, IconButton, Dialog, DialogContent, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { Menu, MenuItem } from "@mui/material";
 // import { openWhatsAppDesktop } from "../functions";
 import { useNavigate, useParams } from "react-router-dom";
 import { useScreenDetectorMui } from "../../../hooks/screenDetectorMui";
 import { BackIcon, DownArrowIcon, MenuDotIcon, ProfileIcon, SearchIcon, VideoCallIcon } from "../../../assects/icons/Icons";
 import { openWhatsAppDesktop } from "./contactChatFunctions";
+import { useAppDispatch, useAppSelector } from "../../../hooks/storeHooks";
 
 export default function ChatToolBar() {
     // const contacts = useSelector((state) => state.contacts.contacts)
 
     const { receiverId } = useParams()
 
+    console.log("first", receiverId)
+
     const navigate = useNavigate()
 
     // let selectedUser = contacts.find((contact) => contact.contactId === receiverId)
 
-    let selectedUser = useSelector((state) => state.contacts.contacts.find((contact) => contact.contactId == receiverId))
+    let selectedUser = useAppSelector((state) => state.contacts.contacts.find((contact) => contact.contactId == receiverId))
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     const screen = useScreenDetectorMui()
 
@@ -39,7 +41,7 @@ export default function ChatToolBar() {
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-    const handleClick = (event) => {
+    const handleClick = (event:any) => {
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
@@ -54,7 +56,7 @@ export default function ChatToolBar() {
         setIsModalOpen(false);
     };
 
-    function VideoCallModal({ isOpen, onClose }) {
+    function VideoCallModal({ isOpen, onClose }:{isOpen:boolean, onClose:Function}) {
         return (
             <Dialog
                 open={isOpen}
@@ -162,7 +164,7 @@ export default function ChatToolBar() {
                                 color="#d9dee0"
                                 height={24}
                                 width={24}
-                                onClick={(e) => {
+                                onClick={(e:any) => {
                                     navigate(`/`)
                                 }}
                             />}

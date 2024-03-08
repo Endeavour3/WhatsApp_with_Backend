@@ -7,8 +7,8 @@ export const openWhatsAppDesktop = () => {
 };
 
 
-export const generateMessage = (text, senderId, contactId) => {
-    return (dispatch, getState) => {
+export const generateMessage = (text:string, senderId:number, contactId:number) => {
+    return (dispatch:any, getState:any) => {
         const messages = getState().messages.messages
         dispatch(setMessages({
             id: messages.length < 1 ? 1 : Number(messages[messages.length - 1].messageId) + 1,
@@ -32,3 +32,5 @@ export const generateMessage = (text, senderId, contactId) => {
         // },
     }
 }
+
+// https://www.bezkoder.com/upload-image-react-typescript/

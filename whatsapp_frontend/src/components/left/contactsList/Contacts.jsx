@@ -241,7 +241,7 @@ export default function Contacts() {
                               >
                                 <DownArrowIcon height={20} width={20} color={"#8696a0"} />
                               </IconButton>
-                              <Menu
+                              {/* <Menu
                                 id="account-menu"
                                 anchorEl={anchorEl}
                                 anchorReference="anchorPosition"
@@ -277,7 +277,7 @@ export default function Contacts() {
                                     {item}
                                   </MenuItem>
                                 ))}
-                              </Menu>
+                              </Menu> */}
                             </Stack>
                           </Stack>
                         </ListItem >
