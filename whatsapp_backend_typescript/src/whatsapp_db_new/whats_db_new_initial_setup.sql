@@ -1,32 +1,36 @@
-CREATE DATABASE IF NOT EXISTS whatsapp_db;
-USE whatsapp_db;
+CREATE DATABASE IF NOT EXISTS whatsapp_db_new;
 
-CREATE TABLE IF NOT EXISTS contacts (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    contact_no VARCHAR(15) UNIQUE,
-    contact_name VARCHAR(255) NOT NULL,
-    profile_picture BLOB DEFAULT NULL,
-    contact_about TEXT DEFAULT NULL,
-    last_seen DATETIME DEFAULT NULL
+USE whatsapp_db_new;
+
+CREATE TABLE IF NOT EXISTS Contacts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  contact_no VARCHAR(255) UNIQUE NOT NULL,
+  contact_name VARCHAR(255) NOT NULL,
+  profile_picture VARCHAR(255) DEFAULT NULL,
+  contact_about VARCHAR(255) DEFAULT NULL,
+  last_seen DATETIME DEFAULT NULL
 );
 
-CREATE TABLE IF NOT EXISTS messages (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    message_content TEXT NOT NULL,
-    send_from INT NOT NULL,
-    send_to INT NOT NULL,
-    created_at DATETIME NOT NULL,
-    delivered_at DATETIME DEFAULT NULL,
-    read_at DATETIME DEFAULT NULL,
-    FOREIGN KEY (send_from) REFERENCES contacts(id),
-    FOREIGN KEY (send_to) REFERENCES contacts(id)
+CREATE TABLE IF NOT EXISTS Messages (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  message_content TEXT NOT NULL,
+  send_from_id INT NOT NULL,
+  send_to_id INT NOT NULL,
+  created_at DATETIME NOT NULL,
+  delivered_at DATETIME DEFAULT NULL,
+  read_at DATETIME DEFAULT NULL,
+  FOREIGN KEY (send_from_id) REFERENCES Contacts(id),
+  FOREIGN KEY (send_to_id) REFERENCES Contacts(id)
 );
 
-CREATE TABLE IF NOT EXISTS otps (
-    otp VARCHAR(6) PRIMARY KEY,
-    contact_id INT UNIQUE,
-    FOREIGN KEY (contact_id) REFERENCES contacts(id)
+CREATE TABLE IF NOT EXISTS Otps (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  otp VARCHAR(255) NOT NULL,
+  contact_id INT,
+  FOREIGN KEY (contact_id) REFERENCES Contacts(id)
 );
+
+
 
 INSERT INTO contacts (contact_no, contact_name, profile_picture, contact_about, last_seen)
 values
@@ -43,7 +47,7 @@ values
     ('918208210160', 'Prathamesh Gode', '', 'Available', '2024-02-28 12:12:12'),
     ('919373429068', 'Akash Kharat', '', 'Available', '2024-02-28 12:12:12');
     
-INSERT INTO messages (message_content, send_from, send_to, created_at)
+INSERT INTO messages (message_content, send_from_id, send_to_id, created_at)
 VALUES
     ('hii', 1,2, '2024-02-09 13:28:00'),
     ('bye', 1,3, '2024-02-10 13:29:00'),

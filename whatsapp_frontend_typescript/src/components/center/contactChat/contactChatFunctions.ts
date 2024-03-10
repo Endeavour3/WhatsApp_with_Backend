@@ -1,5 +1,5 @@
 import moment from "moment";
-import { setMessages } from "../../../store/messagesSlice";
+import { setMessages } from "../../../store/messages/messagesSlice";
 import { AppDispatch } from "../../../store/store";
 
 export const openWhatsAppDesktop = () => {
@@ -8,8 +8,9 @@ export const openWhatsAppDesktop = () => {
 };
 
 
+
 export const generateMessage = (text:string, senderId:number, contactId:number) => {
-    return (dispatch:AppDispatch, getState:any) => {
+    return (dispatch:AppDispatch, getState:Function) => {
         const messages = getState().messages.messages
         dispatch(setMessages({
             id: messages.length < 1 ? 1 : Number(messages[messages.length - 1].messageId) + 1,

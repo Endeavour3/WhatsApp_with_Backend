@@ -1,18 +1,21 @@
+import { addContact, authenticate, checkContactNo, getContact, getContactMessages, getContacts, getMessages, sendOtp, setMessage, setProfile, verifyOtp } from './database.js'
+
 import express from 'express'
 import multer from 'multer'
-
-import { addContact, authenticate, checkContactNo, getContact, getContactMessages, getContacts, getMessages, sendOtp, setMessage, setProfile, verifyOtp } from './database.js'
+import cors from 'cors'
 
 const app = express()
 
 app.use(express.json())
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    next();
-});
+app.use(cors())
+
+// app.use((req, res, next) => {
+//     res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+//     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+//     res.header('Access-Control-Allow-Headers', 'Content-Type');
+//     next();
+// });
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -21,11 +24,8 @@ const upload = multer({ storage: storage });
 app.post('/send-otp', upload.none(), async (req, res) => {
     const contact_no = req.body.phoneNumber;
     const contact = await checkContactNo(contact_no)
-    console.log("contact_no", contact_no)
-    if (contact_no == contact.contact_no) {
-        console.log("contact.id", contact)
+    if (contact_no == contact?.contact_no) {
         const otp = await sendOtp(contact.id)
-        console.log("otp", otp)
         // res.status(200).json(otp)
         res.json(otp)
 
@@ -38,7 +38,6 @@ app.post('/verify-otp', upload.any(), async (req, res) => {
     const contact_no = req.body.phoneNumber;
     const otp = req.body.otp;
     const result = await verifyOtp(contact_no, otp)
-    console.log("first", result)
     if (contact_no == result.contact_no && otp == result.otp) {
         res.status(200).json({ message: "OTP verified sucessfully", contactId: result.id })
     } else {
